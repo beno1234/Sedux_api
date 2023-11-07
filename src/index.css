@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.botao {
+  background: linear-gradient(90deg, #f89e44 0%, #d42f86 100%);
+}
+
+.botao2 {
+  background: linear-gradient(90deg, #d42f86 0%, #5061d0 100%);
+}
+
+.bg-img {
+  background-image: url(./assets/pessoa-de-origem-indiana-se-divertindo.jpg);
+  background-position: center center;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* .bg-img {
+  background-image: url(./assets/2_2.mp4);
+  background-position: center center;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+ */
+.bg-video {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: 100%;
+  height: 100%;
+  z-index: -100;
+  background: url(./assets/pessoa-de-origem-indiana-se-divertindo.jpg);
+  background-size: cover;
+}
+
+body {
+  /*   font-family: 'Inter', sans-serif; */
+  font-family: "Poppins", sans-serif;
+}
