@@ -34,6 +34,11 @@ interface GeocodingResult {
   }[];
 }
 
+interface NominatimResult {
+  address: any;
+  display_name: string;
+}
+
 export const Page = ({
   step,
   title,
@@ -46,34 +51,32 @@ export const Page = ({
   );
   const [placeName, setPlaceName] = useState<string | null>(null);
 
-  useEffect(() => {
+  const getCurrentLocation = () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         setUserLocation([position.coords.latitude, position.coords.longitude]);
         console.log(position);
       });
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    getCurrentLocation();
+  }, []); // Chama a função uma vez quando o componente é montado
 
   useEffect(() => {
     if (userLocation) {
-      const apiKey = "AIzaSyDkFw_NNbKWzBBh5X9icmtNOtJ5yDGAgvA";
-      const geocodingUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${userLocation[0]},${userLocation[1]}&key=${apiKey}`;
+      const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?lat=${userLocation[0]}&lon=${userLocation[1]}&format=json&addressdetails=1`;
 
       axios
-        .get<GeocodingResult>(geocodingUrl)
+        .get<NominatimResult>(nominatimUrl)
         .then((response) => {
-          const results = response.data.results;
+          const city = response.data.address.city || response.data.address.town;
 
-          if (results.length > 0) {
-            const cityComponent = results[0].address_components.find(
-              (component: { types: string[] }) =>
-                component.types.includes("locality")
-            );
+          console.log("Nominatim API response:", city);
 
-            if (cityComponent) {
-              setPlaceName(cityComponent.long_name);
-            }
+          if (city) {
+            setPlaceName(city);
           }
         })
         .catch((error) => {
@@ -105,7 +108,11 @@ export const Page = ({
               <h1 className="text-2xl font-bold ">{title}</h1>
               <p className="text-base font-normal">{text}</p>
               <p className="text-black font-bold">
-                Localização do usuário: {userLocation}
+                {placeName && (
+                  <p className="text-white font-bold">
+                    Nome da cidade: {placeName}
+                  </p>
+                )}
               </p>
               <div className="flex items-center justify-between gap-3">
                 <Botao style="style1" text={textBotao} link={step} />
